@@ -6,20 +6,20 @@ import java.io.StringReader
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.util.Version
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
-import org.apache.lucene.analysis.WordlistLoader
+
 import org.apache.lucene.search.highlight.Highlighter
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter
 import org.apache.lucene.search.highlight.QueryScorer
-import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.queryparser.classic.QueryParser;
 
 /**
  * 高亮测试
  */
 object HL {
   def highLighter(text: String, queryString: String) = {
-    val analyzer = new StandardAnalyzer(Version.LUCENE_34)
+    val analyzer = new StandardAnalyzer()
     val tokenStreams = analyzer.tokenStream("title", new StringReader(text))
-    val parser = new QueryParser(Version.LUCENE_34, "title", new StandardAnalyzer(Version.LUCENE_34))
+    val parser = new QueryParser("title", new StandardAnalyzer())
     val query = parser.parse(queryString)
     val simpleHTMLFormatter = new SimpleHTMLFormatter("<font color='red'>", "</font>")
     val scorer = new QueryScorer(query)
