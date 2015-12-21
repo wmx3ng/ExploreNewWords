@@ -13,7 +13,6 @@ object Test extends App {
   var pos = 0
   for (word <- words) {
     library.addTerm(word.getWord)
-    //浠呭悜宸﹀鐞嗗嵆鍙�;
     for (i <- 0 to pos - 1) {
       if (word.getOffsetStart == words(i).getOffsetEnd) {
         val nw = words(i).getWord + word.getWord
@@ -21,7 +20,8 @@ object Test extends App {
         if (newWords contains nw) {
           cnt += newWords(nw);
         }
-
+        library.addLeftTerm(word.getWord, words(i).getWord)
+        library.addRigthTerm(words(i).getWord, word.getWord)
         newWords += (nw -> cnt)
       }
     }
@@ -37,4 +37,6 @@ object Test extends App {
   for (key <- newWords.keySet) {
     println(key + " " + newWords(key))
   }
+  library.print()
+
 }
