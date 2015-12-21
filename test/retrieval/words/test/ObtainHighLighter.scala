@@ -1,4 +1,4 @@
-package retrieval.words
+package retrieval.words.test
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import java.io.StringReader
@@ -13,6 +13,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
  *
  */
 object ObtainHighLighter {
+  //标准分词器分词高亮;
   def highLighter( text : String, queryString : String ) = {
     val analyzer = new StandardAnalyzer()
     val tokenStreams = analyzer.tokenStream( "title", new StringReader( text ) )
@@ -26,6 +27,7 @@ object ObtainHighLighter {
     hl.getBestFragments( tokenStreams, text, 3, "..." )
   }
 
+  //IK分词器分词高亮;
   def highLighter_ik( text : String, queryString : String ) = {
     val analyzer = new IKAnalyzer
 

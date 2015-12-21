@@ -1,4 +1,4 @@
-package retrieval.words
+package retrieval.words.test
 
 import org.wltea.analyzer.lucene.IKAnalyzer
 import org.apache.lucene.analysis.TokenStream
@@ -16,28 +16,32 @@ import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute
 import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute
+import scala.collection.mutable.ListBuffer
+import retrieval.words.library.Word
 
 /**
  * 获取分词词项;
  */
-object HL {
-  def obtainTerms( text : String ) {
+object ObtainTerms {
+  def obtainTerms( text : String ) : List[Word] = {
     val analyzer = new IKAnalyzer
     val tokenStreams = analyzer.tokenStream( "title", new StringReader( text ) )
+    //必须有这一步;否则报错;
     tokenStreams.reset()
 
+    //词项信息;
     val termAttr = tokenStreams.addAttribute( classOf[CharTermAttribute] )
+    //偏移信息;
     val offset = tokenStreams.addAttribute( classOf[OffsetAttribute] )
-    val pos = tokenStreams.addAttribute( classOf[PositionIncrementAttribute] )
-    val termType = tokenStreams.addAttribute( classOf[TypeAttribute] )
+    //位置增量信息;
+    //    val posIncr = tokenStreams.addAttribute( classOf[PositionIncrementAttribute] )
+    //词项类型;
+    //    val termType = tokenStreams.addAttribute( classOf[TypeAttribute] )
 
+    var wordsBuffer = ListBuffer[Word]()
     while ( tokenStreams.incrementToken() ) {
-      println( "positionIncre:" + pos.getPositionIncrement + " type:" + termType + " term:" + termAttr + " offset_begin:" + offset.startOffset() + " offset_end:" + offset.endOffset() )
+      wordsBuffer += ( new Word( termAttr.toString(), offset.startOffset, offset.endOffset ) )
     }
-  }
-
-  def main( args : Array[String] ) {
-    val text = "现在社会上有很多坑爹的货"
-    obtainTerms( text )
+    wordsBuffer.toList
   }
 }
