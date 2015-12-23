@@ -22,8 +22,8 @@ import retrieval.words.library.TermInfo
 /**
  * 获取分词词项;
  */
-object ObtainTerms {
-  def obtainTerms(text: String): List[TermInfo] = {
+object ObtainTermInfo {
+  def obtainTerms(text : String) : List[TermInfo] = {
     val analyzer = new IKAnalyzer
     val tokenStreams = analyzer.tokenStream("title", new StringReader(text))
     //必须有这一步;否则报错;

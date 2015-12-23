@@ -1,6 +1,9 @@
 package retrieval.words.library
 
-class TermInfo(word: String, offset_start: Int, offset_end: Int) {
+/**
+ * 分词器分词的信息;包括在单篇文档中词串,位置信息;位置信息用于判断是否相邻.
+ */
+class TermInfo(word : String, offset_start : Int, offset_end : Int) {
   def getWord = word
   def getOffsetStart = offset_start
   def getOffsetEnd = offset_end
