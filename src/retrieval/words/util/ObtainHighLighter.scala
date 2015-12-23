@@ -1,11 +1,10 @@
-package retrieval.words.test
+package retrieval.words.util
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import java.io.StringReader
 import org.apache.lucene.search.highlight.Highlighter
 import org.apache.lucene.search.highlight.QueryScorer
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter
-import org.apache.lucene.util.Version
 import org.wltea.analyzer.lucene.IKAnalyzer
 import org.apache.lucene.queryparser.classic.QueryParser;
 

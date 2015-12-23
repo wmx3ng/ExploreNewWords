@@ -1,23 +1,13 @@
-package retrieval.words.test
+package retrieval.words.util
 
 import org.wltea.analyzer.lucene.IKAnalyzer
-import org.apache.lucene.analysis.TokenStream
 import java.io.StringReader
-import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.util.Version
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
-import org.apache.lucene.search.highlight.Highlighter
-import org.apache.lucene.search.highlight.SimpleHTMLFormatter
-import org.apache.lucene.search.highlight.QueryScorer
-import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.analysis.tokenattributes.OffsetAttributeImpl
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttributeImpl
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute
-import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute
 import scala.collection.mutable.ListBuffer
 import retrieval.words.library.TermInfo
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
 
 /**
  * 获取分词词项;

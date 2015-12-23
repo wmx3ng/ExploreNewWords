@@ -3,6 +3,7 @@ package retrieval.words.test
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap
 import retrieval.words.library.TermLibrary
+import retrieval.words.util.ObtainTermInfo
 
 object Test extends App {
   val text = "清华大学化学实验室"
