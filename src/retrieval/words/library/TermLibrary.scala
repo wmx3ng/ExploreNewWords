@@ -9,14 +9,48 @@ import scala.collection.mutable.Map
  * 每个Term的左邻字,右邻字及其频率;
  */
 class TermLibrary {
+  //当前处理的文本片断长度;
   var textLength : Int = _
-  //存储词项; 
+  //存储分词器生成的Term; 
   private var terms = HashMap[String, Int]()
-  //存储左邻词;
+
+  //Term的左结合,右结合 信息熵;
+  private var termEntropy = HashMap[String, (Double, Double)]()
+  //Term的左邻词;
   private var leftTerms = new HashMap[String, Map[String, Int]]()
-  //右邻词;
+  //Term的右邻词;
   private var rightTerms = new HashMap[String, Map[String, Int]]()
 
+  //计算内部聚合度;
+  def calInfoEntropy() {
+    for (term <- terms.keySet) {
+      //左熵;
+      var leftEntropy = 0.0D
+      var rightEntropy = 0.0D
+      var sum = 0
+      if (leftTerms contains term) {
+        for (left <- leftTerms(term)) {
+          sum += left._2
+        }
+        for (left <- leftTerms(term)) {
+          val p = 1.0 * left._2 / sum
+          leftEntropy += (-p * math.log(p))
+        }
+      }
+
+      if (rightTerms contains term) {
+        sum = 0
+        for (right <- rightTerms(term)) {
+          sum += right._2
+        }
+        for (right <- rightTerms(term)) {
+          val p = 1.0 * right._2 / sum
+          rightEntropy += (-p * math.log(p))
+        }
+      }
+      termEntropy += (term -> (leftEntropy, rightEntropy))
+    }
+  }
   //添加分词;
   def addTerm(word : String) {
     var cnt = 1
@@ -25,7 +59,11 @@ class TermLibrary {
     terms += (word -> cnt)
   }
 
-  def existsWord(word : String) =
+  def getTermFre(word : String) = if (terms contains word) terms(word) else 0
+
+  def getTermCnt() = terms.size
+
+  def existsTerm(word : String) =
     if (terms contains word) true else false
 
   //添加左邻词; 
@@ -61,7 +99,7 @@ class TermLibrary {
   //打印
   def print() {
     println("terms:")
-    terms.keySet.foreach { x => println("  " + x + "  " + terms(x)) }
+    terms.keySet.foreach { x => println("  " + x + "  " + terms(x) + " leftEntropy:" + termEntropy(x)._1 + " rightEntropy:" + termEntropy(x)._2) }
     println("left_br:")
     for (l <- leftTerms.keySet) {
       println("  " + l)
@@ -73,5 +111,4 @@ class TermLibrary {
       rightTerms(r).keySet.foreach { x => println("    " + x + " " + rightTerms(r)(x)) }
     }
   }
-
 }
