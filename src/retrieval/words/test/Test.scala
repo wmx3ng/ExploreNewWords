@@ -64,8 +64,8 @@ object Test {
     library.calInfoEntropy()
     //  library.print()
     candidate.filterNewTerm(library)
-    candidate.print()
-    //  println(candidate.result)
+    //    candidate.print()
+    println(candidate.result)
 
   }
 
