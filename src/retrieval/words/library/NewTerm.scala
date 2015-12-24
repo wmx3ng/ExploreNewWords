@@ -19,12 +19,13 @@ class NewTerm {
     for (candidate <- candidateTerm.keySet) {
       val sum = candidateTerm(candidate).reduce((x, y) => (x._1, x._2 + x._2))._2
       val ratio = for (group <- candidateTerm(candidate)) yield {
-        //        group._2 * 1.0 / library.textLength
+        //group._2 * 1.0 / library.textLength
         val w1 = group._1._1
         val w2 = group._1._2
         //算法1,用文章长度计算概率;
-        //        1.0 * candidate.size * sum * library.textLength / (w1.size * library.getTermFre(w1) * w2.size * library.getTermFre(w2))
-        println(cnt + " " + sum + " " + library.getTermFre(w1) + " " + library.getTermFre(w2))
+        //1.0 * candidate.size * sum * library.textLength / (w1.size * library.getTermFre(w1) * w2.size * library.getTermFre(w2))
+
+        //算法2,用分词的个数计算概率;
         1.0 * sum * cnt / (library.getTermFre(w1) * library.getTermFre(w2))
       }
       newTerm += (candidate -> ratio.reduce((x, y) => if (x > y) y else x))
@@ -50,5 +51,6 @@ class NewTerm {
     for (term <- newTerm.keySet; if newTerm(term) > 100) {
       println(term + " " + newTerm(term))
     }
+    println(newTerm.keySet.size)
   }
 }
