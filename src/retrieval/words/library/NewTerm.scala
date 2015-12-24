@@ -49,7 +49,7 @@ class NewTerm {
 
   //需要用懒加载;
   lazy val result = {
-    val l = for (term <- newTerm if term._2 > 100) yield { term._1 + " " + term._2 }
+    val l = for (term <- newTerm if term._2 >= 500) yield { term._1 + " " + term._2 }
     l.mkString("\n")
   }
 
