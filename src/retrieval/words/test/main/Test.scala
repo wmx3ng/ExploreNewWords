@@ -16,7 +16,7 @@ object Test {
     //    val path = "/home/wang/sg"
     //    val path = "/home/wang/Documents/ShareFolder/sgyy2.txt"
     //    val path = "/home/wang/Documents/ShareFolder/xjp"
-    val path = "/home/wang/Documents/ShareFolder/sdmz"
+    val path = "yuliao/sdmz"
 
     //从文件中读取文本;
     val lines = Source.fromFile(new java.io.File(path)).getLines().toList.mkString
