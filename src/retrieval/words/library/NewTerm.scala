@@ -9,7 +9,9 @@ import scala.collection.mutable.HashMap
 class NewTerm {
 
   //最终形成的新词;及其形成条件概率;
-  private var newTerm = HashMap[String, Double]()
+  private var newTerm = HashMap[String, (Double, Int)]()
+  //记录形成新词的词组;
+  private var newTuple = HashMap[String, (String, String)]()
   //词组信息;目前新词由两个词组成;统计每种组成的概率,选择出最小的那组;
   private var candidateTerm = HashMap[String, Map[(String, String), Int]]()
 
@@ -17,19 +19,23 @@ class NewTerm {
   def filterNewTerm(library : TermLibrary) {
     val cnt = library.getTermCnt
     for (candidate <- candidateTerm.keySet) {
-      val sum = candidateTerm(candidate).reduce((x, y) => (x._1, x._2 + x._2))._2
+      val sum = candidateTerm(candidate).foldLeft(0)((x : Int, y : (Any, Int)) => x + y._2)
+
       val ratio = for (group <- candidateTerm(candidate)) yield {
-        //group._2 * 1.0 / library.textLength
         val w1 = group._1._1
         val w2 = group._1._2
-        //算法1,用文章长度计算概率;
-        //1.0 * candidate.size * sum * library.textLength / (w1.size * library.getTermFre(w1) * w2.size * library.getTermFre(w2))
 
         //算法2,用分词的个数计算概率;
-        1.0 * sum * cnt / (library.getTermFre(w1) * library.getTermFre(w2))
+        (1.0 * sum * cnt / (library.getTermFre(w1) * library.getTermFre(w2)), group._1)
       }
-      newTerm += (candidate -> ratio.reduce((x, y) => if (x > y) y else x))
+      val res = ratio.reduce((x, y) => if (x._1 > y._1) y else x)
+      newTerm += (candidate -> (res._1, sum))
+      newTuple += (candidate -> res._2)
     }
+  }
+
+  def getNewTermTuple(nw : String) = {
+    newTuple(nw)
   }
 
   //增加新的词组;统计其数量;
@@ -48,15 +54,8 @@ class NewTerm {
   }
 
   //需要用懒加载;
-  lazy val result = {
-    val l = for (term <- newTerm if term._2 >= 500) yield { term._1 + " " + term._2 }
-    l.mkString("\n")
-  }
-
-  def print() {
-    for (term <- newTerm.keySet; if newTerm(term) > 100) {
-      println(term + " " + newTerm(term))
-    }
-    println(newTerm.keySet.size)
+  def result(library : TermLibrary) = {
+    val l = for (term <- newTerm if term._2._1 >= 300) yield { (term._1, term._2) }
+    (l.filter(p => p._2._2 > 3).toList.sortWith((x, y) => x._2._1 < y._2._1).map(x => x._1 + " " + x._2 + " " + newTuple(x._1)._1 + " " + library.getTermEntropy(newTuple(x._1)._1) + " " + newTuple(x._1)._2 + " " + library.getTermEntropy(newTuple(x._1)._1))).mkString("\n")
   }
 }

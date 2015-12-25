@@ -1,4 +1,4 @@
-package retrieval.words.test
+package retrieval.analysis.test.ansj
 
 import org.ansj.splitWord.analysis.ToAnalysis
 

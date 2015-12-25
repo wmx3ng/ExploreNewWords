@@ -8,6 +8,7 @@ import scala.collection.mutable.ListBuffer
 import retrieval.words.library.TermInfo
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute
 
 /**
  * 获取分词词项;
@@ -24,7 +25,7 @@ object ObtainTermInfo {
     //偏移信息;
     val offset = tokenStreams.addAttribute(classOf[OffsetAttribute])
     //位置增量信息;
-    //    val posIncr = tokenStreams.addAttribute( classOf[PositionIncrementAttribute] )
+    //    val posIncr = tokenStreams.addAttribute(classOf[PositionIncrementAttribute])
     //词项类型;
     //    val termType = tokenStreams.addAttribute( classOf[TypeAttribute] )
 

@@ -3,6 +3,7 @@ package retrieval.words.library
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import scala.collection.mutable.ListBuffer
 
 /**
  * 记录分词器分出的结果;
@@ -13,6 +14,7 @@ class TermLibrary {
   var textLength : Int = _
   //存储分词器生成的Term; 
   private var terms = HashMap[String, Int]()
+  private var invertedIndex = HashMap[Int, collection.mutable.ListBuffer[String]]()
 
   //Term的左结合,右结合 信息熵;
   private var termEntropy = HashMap[String, (Double, Double)]()
@@ -20,6 +22,30 @@ class TermLibrary {
   private var leftTerms = new HashMap[String, Map[String, Int]]()
   //Term的右邻词;
   private var rightTerms = new HashMap[String, Map[String, Int]]()
+
+  //get topK terms
+  def getTopKTerms(cnt : Int) = {
+    terms.map(x => (x._1, x._2)).filter(_._1.length() != 1).toList.sortWith((x, y) => x._2 > y._2).slice(0, cnt).map(_.toString()).mkString("\n")
+  }
+
+  //offset_End->word
+  def addInvertedIndex(pos : Int, word : String) {
+    if (invertedIndex contains pos) {
+      invertedIndex(pos) += word
+    } else {
+      var l = ListBuffer[String]()
+      l += word
+      invertedIndex += (pos -> l)
+    }
+  }
+
+  def getInvertedIndex(pos : Int) = {
+    if (invertedIndex contains pos) {
+      invertedIndex(pos)
+    } else {
+      ListBuffer[String]()
+    }
+  }
 
   //计算内部聚合度;
   def calInfoEntropy() {
@@ -51,6 +77,11 @@ class TermLibrary {
       termEntropy += (term -> (leftEntropy, rightEntropy))
     }
   }
+
+  def getTermEntropy(word : String) = {
+    termEntropy(word)
+  }
+
   //添加分词;
   def addTerm(word : String) {
     var cnt = 1
@@ -93,22 +124,6 @@ class TermLibrary {
       var right_br = new HashMap[String, Int]()
       right_br += (right -> 1)
       rightTerms += (word -> right_br)
-    }
-  }
-
-  //打印
-  def print() {
-    println("terms:")
-    terms.keySet.foreach { x => println("  " + x + "  " + terms(x) + " leftEntropy:" + termEntropy(x)._1 + " rightEntropy:" + termEntropy(x)._2) }
-    println("left_br:")
-    for (l <- leftTerms.keySet) {
-      println("  " + l)
-      leftTerms(l).keySet.foreach { x => println("    " + x + " " + leftTerms(l)(x)) }
-    }
-    println("right_br:")
-    for (r <- rightTerms.keySet) {
-      println("  " + r)
-      rightTerms(r).keySet.foreach { x => println("    " + x + " " + rightTerms(r)(x)) }
     }
   }
 }
