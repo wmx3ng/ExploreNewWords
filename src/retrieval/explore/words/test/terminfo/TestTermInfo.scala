@@ -1,11 +1,9 @@
-package retrieval.words.test.terminfo
+package retrieval.explore.words.test.terminfo
 
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap
-import retrieval.words.library.TermLibrary
-import retrieval.words.util.ObtainTermInfo
 import scala.io.Source
-import retrieval.words.library.NewTerm
+import retrieval.explore.words.util.obtainterms.ObtainTermInfo
 
 object TestTermInfo extends App {
 

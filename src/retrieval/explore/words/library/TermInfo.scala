@@ -1,4 +1,4 @@
-package retrieval.words.library
+package retrieval.explore.words.library
 
 /**
  * 分词器分词的信息;包括在单篇文档中词串,位置信息;位置信息用于判断是否相邻.

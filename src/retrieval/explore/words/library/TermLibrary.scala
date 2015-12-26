@@ -1,4 +1,4 @@
-package retrieval.words.library
+package retrieval.explore.words.library
 
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap

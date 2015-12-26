@@ -1,11 +1,11 @@
-package retrieval.words.test.main
+package retrieval.explore.words.test.main
 
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap
-import retrieval.words.library.TermLibrary
-import retrieval.words.util.ObtainTermInfo
 import scala.io.Source
-import retrieval.words.library.NewTerm
+import retrieval.explore.words.library.TermLibrary
+import retrieval.explore.words.library.NewTerm
+import retrieval.explore.words.util.obtainterms.ObtainTermInfo
 
 object Test {
 

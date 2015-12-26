@@ -1,6 +1,7 @@
-package retrieval.words.library
+package retrieval.explore.words.library
 
 import scala.collection.mutable.HashMap
+import retrieval.explore.words.util.constval.ExploreConstVal
 
 /**
  * 产生的新词；
@@ -55,7 +56,7 @@ class NewTerm {
 
   //需要用懒加载;
   def result(library : TermLibrary) = {
-    val l = for (term <- newTerm if term._2._1 >= 300) yield { (term._1, term._2) }
-    (l.filter(p => p._2._2 > 3).toList.sortWith((x, y) => x._2._1 < y._2._1).map(x => x._1 + " " + x._2 + " " + newTuple(x._1)._1 + " " + library.getTermEntropy(newTuple(x._1)._1) + " " + newTuple(x._1)._2 + " " + library.getTermEntropy(newTuple(x._1)._1))).mkString("\n")
+    val l = for (term <- newTerm if term._2._1 >= ExploreConstVal.score) yield { (term._1, term._2) }
+    (l.filter(p => p._2._2 > ExploreConstVal.showNum).toList.sortWith((x, y) => x._2._1 < y._2._1).map(x => x._1 + " " + x._2 + " " + newTuple(x._1)._1 + " " + library.getTermEntropy(newTuple(x._1)._1) + " " + newTuple(x._1)._2 + " " + library.getTermEntropy(newTuple(x._1)._1))).mkString("\n")
   }
 }

@@ -1,14 +1,14 @@
-package retrieval.words.util
+package retrieval.explore.words.util.obtainterms
 
 import org.wltea.analyzer.lucene.IKAnalyzer
 import java.io.StringReader
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import scala.collection.mutable.ListBuffer
-import retrieval.words.library.TermInfo
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute
+import retrieval.explore.words.library.TermInfo
 
 /**
  * 获取分词词项;
