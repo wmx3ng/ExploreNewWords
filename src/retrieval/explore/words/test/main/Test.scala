@@ -3,9 +3,9 @@ package retrieval.explore.words.test.main
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashMap
 import scala.io.Source
-import retrieval.explore.words.library.TermLibrary
-import retrieval.explore.words.library.NewTerm
 import retrieval.explore.words.util.obtainterms.ObtainTermInfo
+import retrieval.explore.words.struct.TermLibrary
+import retrieval.explore.words.struct.NewTerm
 
 object Test {
 
@@ -47,7 +47,7 @@ object Test {
       }
     }
 
-    //第二次分析,添加候选词;
+    //第二次分析,添加候选词;扩展到多个词(5)
     println("计算候选词...")
     for (word <- words) {
       val left = library.getInvertedIndex(word.getOffsetStart).toList

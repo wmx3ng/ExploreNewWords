@@ -8,15 +8,16 @@ import scala.collection.mutable.ListBuffer
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute
-import retrieval.explore.words.library.TermInfo
+import retrieval.explore.words.util.constval.ExploreConstVal
+import retrieval.explore.words.struct.TermInfo
 
 /**
  * 获取分词词项;
  */
 object ObtainTermInfo {
   def obtainTerms(text : String) : List[TermInfo] = {
-    val analyzer = new IKAnalyzer
-    val tokenStreams = analyzer.tokenStream("title", new StringReader(text))
+    //    val analyzer = new IKAnalyzer
+    val tokenStreams = ExploreConstVal.analyzer.tokenStream("title", new StringReader(text))
     //必须有这一步;否则报错;
     tokenStreams.reset()
 
