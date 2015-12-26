@@ -17,19 +17,14 @@ class NewTerm {
   private var candidateTerm = HashMap[String, Map[Product, Int]]()
 
   //计算新词及其概率;
-  def filterNewTerm(library : TermLibrary) {
+  def filterNewTerm(library: TermLibrary) {
     val cnt = library.getTermCnt
     for (candidate <- candidateTerm.keySet) {
-      val sum = candidateTerm(candidate).foldLeft(0)((x : Int, y : (Any, Int)) => x + y._2)
+      val sum = candidateTerm(candidate).foldLeft(0)((x: Int, y: (Any, Int)) => x + y._2)
 
       val ratio = for (group <- candidateTerm(candidate)) yield {
-        //        val w1 = group._1._1
-        //        val w2 = group._1._2
+        val demon = group._1.productIterator.map { x => library.getTermFre(x.toString()) }.foldLeft(1.0)((x: Double, y: Int) => x * y)
 
-        //        println(tupleKey.size)
-        val demon = group._1.productIterator.map { x => library.getTermFre(x.toString()) }.foldLeft(1.0)((x : Double, y : Int) => x * y)
-
-        //        println(cnt + " " + group._1.productIterator.size + " " + math.pow(cnt, group._1.productIterator.size - 1))
         //算法2,用分词的个数计算概率;
         (1.0 * sum * math.pow(cnt, group._1.productIterator.size - 1) / demon, group._1)
       }
@@ -39,12 +34,12 @@ class NewTerm {
     }
   }
 
-  def getNewTermTuple(nw : String) = {
+  def getNewTermTuple(nw: String) = {
     newTuple(nw)
   }
 
   //增加新的词组;统计其数量;
-  def addCandidateTerm(nw : String, termGroup : Product) {
+  def addCandidateTerm(nw: String, termGroup: Product) {
     if (candidateTerm contains nw) {
       var cnt = 1
       if (candidateTerm(nw) contains termGroup) {
@@ -59,7 +54,7 @@ class NewTerm {
   }
 
   //需要用懒加载;
-  def result(library : TermLibrary) = {
+  def result(library: TermLibrary) = {
     val l = for (term <- newTerm if term._2._1 >= ExploreConstVal.score) yield { (term._1, term._2) }
     (l.filter(p => p._2._2 > ExploreConstVal.showNum).toList.sortWith((x, y) => x._2._1 < y._2._1).map(
       x =>

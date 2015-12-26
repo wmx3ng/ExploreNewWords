@@ -14,5 +14,4 @@ object TestTermInfo extends App {
   for (word <- words) {
     println(word)
   }
-
 }

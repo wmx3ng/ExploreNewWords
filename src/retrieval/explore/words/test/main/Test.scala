@@ -6,10 +6,39 @@ import scala.io.Source
 import retrieval.explore.words.util.obtainterms.ObtainTermInfo
 import retrieval.explore.words.struct.TermLibrary
 import retrieval.explore.words.struct.NewTerm
+import retrieval.explore.words.util.constval.ExploreConstVal
 
 object Test {
 
-  def main(args : Array[String]) {
+  //递归添加新词；
+  def addNewTermToCandidate(candidate: NewTerm, library: TermLibrary,
+    offsetEnd: Int, originTuple: Product) {
+    if (originTuple.productIterator.size < ExploreConstVal.maxLength) {
+      val left = library.getInvertedIndex(offsetEnd).toList
+      val origin = originTuple.productIterator.mkString
+      for (
+        word <- left;
+        nw = word._1 + origin
+      ) {
+        val list = word._1 :: originTuple.productIterator.toList
+        //递归求剩下长度的; 
+        val newTuple = list match {
+          case List(a, b, c, d, e, _*) => (a, b, c, d, e)
+          case List(a, b, c, d, _*) => (a, b, c, d)
+          case List(a, b, c, _*) => (a, b, c)
+          case List(a, b, _*) => (a, b)
+          case _ => Nil
+        }
+        if (!(library existsTerm (nw))) {
+          candidate.addCandidateTerm(nw, newTuple)
+        }
+
+        addNewTermToCandidate(candidate, library, word._2, newTuple)
+      }
+    }
+  }
+
+  def main(args: Array[String]) {
     //  val text = "清华大学化学实验室"
 
     //文件路径;
@@ -32,7 +61,7 @@ object Test {
     println("建立词位置的倒排索引...")
     //建立词位置的倒排索引;
     for (word <- words) {
-      library.addInvertedIndex(word.getOffsetEnd, word.getWord)
+      library.addInvertedIndex(word.getOffsetEnd, (word.getWord, word.getOffsetStart))
     }
     //文本长度;
     library.textLength = lines.length()
@@ -42,8 +71,8 @@ object Test {
       library.addTerm(word.getWord)
       val left = library.getInvertedIndex(word.getOffsetStart).toList
       for (w <- left) {
-        library.addLeftTerm(word.getWord, w)
-        library.addRigthTerm(w, word.getWord)
+        library.addLeftTerm(word.getWord, w._1)
+        library.addRigthTerm(w._1, word.getWord)
       }
     }
 
@@ -51,8 +80,11 @@ object Test {
     println("计算候选词...")
     for (word <- words) {
       val left = library.getInvertedIndex(word.getOffsetStart).toList
-      for (w <- left; nw = w + word.getWord if !(library existsTerm nw)) {
-        candidate.addCandidateTerm(nw, (w, word.getWord))
+      for (w <- left; nw = w._1 + word.getWord) {
+        if (!(library existsTerm nw)) {
+          candidate.addCandidateTerm(nw, (w._1, word.getWord))
+        }
+        addNewTermToCandidate(candidate, library, w._2, (w._1, word.getWord))
       }
     }
 

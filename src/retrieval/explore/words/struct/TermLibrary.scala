@@ -11,10 +11,11 @@ import scala.collection.mutable.ListBuffer
  */
 class TermLibrary {
   //当前处理的文本片断长度;
-  var textLength : Int = _
+  var textLength: Int = _
   //存储分词器生成的Term; 
   private var terms = HashMap[String, Int]()
-  private var invertedIndex = HashMap[Int, collection.mutable.ListBuffer[String]]()
+  //offsetEnd->(word,offsetStart);Int->(String,Int)
+  private var invertedIndex = HashMap[Int, collection.mutable.ListBuffer[(String, Int)]]()
 
   //Term的左结合,右结合 信息熵;
   private var termEntropy = HashMap[String, (Double, Double)]()
@@ -24,26 +25,26 @@ class TermLibrary {
   private var rightTerms = new HashMap[String, Map[String, Int]]()
 
   //get topK terms
-  def getTopKTerms(cnt : Int) = {
+  def getTopKTerms(cnt: Int) = {
     terms.map(x => (x._1, x._2)).filter(_._1.length() != 1).toList.sortWith((x, y) => x._2 > y._2).slice(0, cnt).map(_.toString()).mkString("\n")
   }
 
   //offset_End->word
-  def addInvertedIndex(pos : Int, word : String) {
+  def addInvertedIndex(pos: Int, word: (String, Int)) {
     if (invertedIndex contains pos) {
       invertedIndex(pos) += word
     } else {
-      var l = ListBuffer[String]()
+      var l = ListBuffer[(String, Int)]()
       l += word
       invertedIndex += (pos -> l)
     }
   }
 
-  def getInvertedIndex(pos : Int) = {
+  def getInvertedIndex(pos: Int) = {
     if (invertedIndex contains pos) {
       invertedIndex(pos)
     } else {
-      ListBuffer[String]()
+      ListBuffer[(String, Int)]()
     }
   }
 
@@ -78,27 +79,27 @@ class TermLibrary {
     }
   }
 
-  def getTermEntropy(word : String) = {
+  def getTermEntropy(word: String) = {
     termEntropy(word)
   }
 
   //添加分词;
-  def addTerm(word : String) {
+  def addTerm(word: String) {
     var cnt = 1
     if (terms contains word)
       cnt += terms(word)
     terms += (word -> cnt)
   }
 
-  def getTermFre(word : String) = if (terms contains word) terms(word) else 0
+  def getTermFre(word: String) = if (terms contains word) terms(word) else 0
 
   def getTermCnt() = terms.size
 
-  def existsTerm(word : String) =
+  def existsTerm(word: String) =
     if (terms contains word) true else false
 
   //添加左邻词; 
-  def addLeftTerm(word : String, left : String) {
+  def addLeftTerm(word: String, left: String) {
     if (leftTerms contains word) {
       var cnt = 1
       if (leftTerms(word) contains left)
@@ -113,7 +114,7 @@ class TermLibrary {
   }
 
   //添加右邻词;
-  def addRigthTerm(word : String, right : String) {
+  def addRigthTerm(word: String, right: String) {
     if (rightTerms contains word) {
       var cnt = 1
       if (rightTerms(word) contains right)
