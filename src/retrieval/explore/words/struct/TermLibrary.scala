@@ -95,6 +95,7 @@ class TermLibrary {
 
   def getTermCnt() = terms.size
 
+  //查询分词器的词集中是否存在某一个词；
   def existsTerm(word : String) =
     if (terms contains word) true else false
 
