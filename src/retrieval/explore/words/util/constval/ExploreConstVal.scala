@@ -12,5 +12,5 @@ object ExploreConstVal {
   //结果展示的过滤分数;
   val score = 1000
   //新词的最大长度;(词的个数)
-  val maxLength = 4
+  val maxLength = 5
 }
