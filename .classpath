@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/IKAnalyzer2012_FF_hf1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.10.2.jar"/>

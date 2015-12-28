@@ -7,20 +7,30 @@ import retrieval.explore.words.util.obtainterms.ObtainTermInfo
 import retrieval.explore.words.struct.TermLibrary
 import retrieval.explore.words.struct.NewTerm
 import retrieval.explore.words.util.constval.ExploreConstVal
+import org.nlpcn.commons.lang.occurrence.Count
 
 object Test {
   //list 2 tuple.
   def list2Tuple(originList : List[Any]) = {
     val newTuple = originList match {
-      case List(a, b, c, d, e, f, g, _*) => (a, b, c, d, e, f, g)
-      case List(a, b, c, d, e, f, _*)    => (a, b, c, d, e, f)
-      case List(a, b, c, d, e, _*)       => (a, b, c, d, e)
-      case List(a, b, c, d, _*)          => (a, b, c, d)
-      case List(a, b, c, _*)             => (a, b, c)
-      case List(a, b, _*)                => (a, b)
-      case _                             => Nil
+      case List(a, b, c, d, e, f, g, h, i, j, _*) => (a, b, c, d, e, f, g, h, i, j)
+      case List(a, b, c, d, e, f, g, h, i, _*)    => (a, b, c, d, e, f, g, h, i)
+      case List(a, b, c, d, e, f, g, h, _*)       => (a, b, c, d, e, f, g, h)
+      case List(a, b, c, d, e, f, g, _*)          => (a, b, c, d, e, f, g)
+      case List(a, b, c, d, e, f, _*)             => (a, b, c, d, e, f)
+      case List(a, b, c, d, e, _*)                => (a, b, c, d, e)
+      case List(a, b, c, d, _*)                   => (a, b, c, d)
+      case List(a, b, c, _*)                      => (a, b, c)
+      case List(a, b, _*)                         => (a, b)
+      case _                                      => Nil
     }
     newTuple
+  }
+
+  //得到重复数;
+  def getDupCnt(multiLeft : List[Product]) = {
+    val nws = multiLeft.map { x => x.productIterator.mkString }
+    nws.size - nws.distinct.size
   }
 
   def main(args : Array[String]) {
@@ -28,7 +38,7 @@ object Test {
 
     //从文件中读取文本;
     val lines = Source.fromFile(new java.io.File(path)).getLines().toList.mkString
-
+    //    val lines = "加入特别提款权"
     //文本分词统计结果;
     val library = new TermLibrary
     //候选词集合;
@@ -42,8 +52,6 @@ object Test {
     for (word <- words) {
       library.addInvertedIndex(word.getOffsetEnd, word.getWord)
     }
-    //文本长度;
-    library.textLength = lines.length()
 
     println("统计分词信息...")
     for (word <- words) {
@@ -60,23 +68,27 @@ object Test {
     for (word <- words) {
       //添加两个词的; 
       val singleLeft = library.getInvertedIndex(word.getOffsetStart).toList
+
       for (sl <- singleLeft; nw = sl + word.getWord) {
         if (!(library existsTerm nw)) {
           val t = (sl, word.getWord)
 
           candidate.addCandidateTerm(nw, t)
           candidate.addNewTermInvertedIndex(word.getOffsetEnd, t)
+          candidate.addDupNewTerm(nw, word.getOffsetEnd)
         }
       }
 
       //扩展到多个词;
       val multiLeft = candidate.getInvertedNewTerm(word.getOffsetStart).toList.filter { x => x.productIterator.size <= (ExploreConstVal.maxLength - 1) }
+
       for (ml <- multiLeft; originList = ml.productIterator.toList; nw = originList.mkString + word.getWord) {
         if (!(library existsTerm nw)) {
           val l = (word.getWord :: originList.reverse).reverse
           val t = list2Tuple(l)
           candidate.addCandidateTerm(nw, t)
           candidate.addNewTermInvertedIndex(word.getOffsetEnd, t)
+          candidate.addDupNewTerm(nw, word.getOffsetEnd)
         }
       }
     }

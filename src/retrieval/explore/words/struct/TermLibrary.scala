@@ -10,8 +10,6 @@ import scala.collection.mutable.ListBuffer
  * 每个Term的左邻字,右邻字及其频率;
  */
 class TermLibrary {
-  //当前处理的文本片断长度;
-  var textLength : Int = _
   //存储分词器生成的Term; 
   private var terms = HashMap[String, Int]()
   //offsetEnd->(word,offsetStart);Int->(String,Int)

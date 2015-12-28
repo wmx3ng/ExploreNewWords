@@ -7,7 +7,7 @@ import retrieval.explore.words.util.obtainterms.ObtainTermInfo
 
 object TestTermInfo extends App {
 
-  val text = "垓心抖擞威风，左冲右突显英雄"
+  val text = "加入特别提款权"
   //文本分词链;
   println("分词...")
   val words = ObtainTermInfo.obtainTerms(text)
