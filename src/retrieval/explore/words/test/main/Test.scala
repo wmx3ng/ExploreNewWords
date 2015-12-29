@@ -34,7 +34,7 @@ object Test {
   }
 
   def main(args : Array[String]) {
-    val path = "yuliao/sdmz"
+    val path = "yuliao/ssw"
 
     //从文件中读取文本;
     val lines = Source.fromFile(new java.io.File(path)).getLines().toList.mkString

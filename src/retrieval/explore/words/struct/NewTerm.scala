@@ -27,7 +27,7 @@ class NewTerm {
     if (dupNewTerm contains nw) {
       dupNewTerm(nw) += pos
     } else {
-      var posList = ListBuffer[Int](pos)
+      val posList = ListBuffer[Int](pos)
       dupNewTerm += (nw -> posList)
     }
   }
@@ -64,7 +64,7 @@ class NewTerm {
     if (invertedNewTerm contains pos) {
       invertedNewTerm(pos) += nw
     } else {
-      var ll = new ListBuffer[Product]()
+      val ll = new ListBuffer[Product]()
       ll += nw
       invertedNewTerm += (pos -> ll)
     }

@@ -106,7 +106,7 @@ class TermLibrary {
 
       leftTerms(word) += (left -> cnt)
     } else {
-      var left_br = new HashMap[String, Int]()
+      val left_br = new HashMap[String, Int]()
       left_br += (left -> 1)
       leftTerms += (word -> left_br)
     }
@@ -121,7 +121,7 @@ class TermLibrary {
 
       rightTerms(word) += (right -> cnt)
     } else {
-      var right_br = new HashMap[String, Int]()
+      val right_br = new HashMap[String, Int]()
       right_br += (right -> 1)
       rightTerms += (word -> right_br)
     }
