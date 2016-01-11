@@ -97,7 +97,7 @@ class TermLibrary {
   def existsTerm(word : String) =
     if (terms contains word) true else false
 
-  private def addNighTerm(basicWord : String, destWord : String, neighTerm : Map[String, Map[String, Int]]) {
+  private def addNighTerm(basicWord : String, destWord : String)(neighTerm : Map[String, Map[String, Int]]) {
     if (neighTerm contains basicWord) {
       var cnt = 1
       if (neighTerm(basicWord) contains destWord)
@@ -113,11 +113,11 @@ class TermLibrary {
 
   //添加左邻词; 
   def addLeftTerm(basicWord : String, destWord : String) {
-    addNighTerm(basicWord, destWord, leftTerms)
+    addNighTerm(basicWord, destWord) { leftTerms }
   }
 
   //添加右邻词;
   def addRigthTerm(basicWord : String, destWord : String) {
-    addNighTerm(basicWord, destWord, rightTerms)
+    addNighTerm(basicWord, destWord) { rightTerms }
   }
 }
