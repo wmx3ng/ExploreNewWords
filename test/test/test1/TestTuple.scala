@@ -1,5 +1,7 @@
 
 
+package test.test1
+
 object TestTuple {
   def toTuple[A <: Object](as: List[A]): Product = {
     val tupleClass = Class.forName("scala.Tuple" + as.size)

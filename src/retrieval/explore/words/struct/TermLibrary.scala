@@ -11,12 +11,12 @@ import scala.collection.mutable.ListBuffer
  */
 class TermLibrary {
   //存储分词器生成的Term; 
-  private var terms = HashMap[String, Int]()
+  private var terms = new HashMap[String, Int]()
   //offsetEnd->(word,offsetStart);Int->(String,Int)
-  private var invertedIndex = HashMap[Int, collection.mutable.ListBuffer[String]]()
+  private var invertedIndex = new HashMap[Int, collection.mutable.ListBuffer[String]]()
 
   //Term的左结合,右结合 信息熵;
-  private var termEntropy = HashMap[String, (Double, Double)]()
+  private var termEntropy = new HashMap[String, (Double, Double)]()
   //Term的左邻词;
   private var leftTerms = new HashMap[String, Map[String, Int]]()
   //Term的右邻词;
@@ -97,33 +97,27 @@ class TermLibrary {
   def existsTerm(word : String) =
     if (terms contains word) true else false
 
-  //添加左邻词; 
-  def addLeftTerm(word : String, left : String) {
-    if (leftTerms contains word) {
+  private def addNighTerm(basicWord : String, destWord : String, neighTerm : Map[String, Map[String, Int]]) {
+    if (neighTerm contains basicWord) {
       var cnt = 1
-      if (leftTerms(word) contains left)
-        cnt += leftTerms(word)(left)
+      if (neighTerm(basicWord) contains destWord)
+        cnt += neighTerm(basicWord)(destWord)
 
-      leftTerms(word) += (left -> cnt)
+      neighTerm(basicWord) += (destWord -> cnt)
     } else {
-      val left_br = new HashMap[String, Int]()
-      left_br += (left -> 1)
-      leftTerms += (word -> left_br)
+      val neigh_br = new HashMap[String, Int]()
+      neigh_br += (destWord -> 1)
+      neighTerm += (basicWord -> neigh_br)
     }
   }
 
-  //添加右邻词;
-  def addRigthTerm(word : String, right : String) {
-    if (rightTerms contains word) {
-      var cnt = 1
-      if (rightTerms(word) contains right)
-        cnt += rightTerms(word)(right)
+  //添加左邻词; 
+  def addLeftTerm(basicWord : String, destWord : String) {
+    addNighTerm(basicWord, destWord, leftTerms)
+  }
 
-      rightTerms(word) += (right -> cnt)
-    } else {
-      val right_br = new HashMap[String, Int]()
-      right_br += (right -> 1)
-      rightTerms += (word -> right_br)
-    }
+  //添加右邻词;
+  def addRigthTerm(basicWord : String, destWord : String) {
+    addNighTerm(basicWord, destWord, rightTerms)
   }
 }
