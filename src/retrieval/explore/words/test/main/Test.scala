@@ -8,31 +8,9 @@ import retrieval.explore.words.struct.TermLibrary
 import retrieval.explore.words.struct.NewTerm
 import retrieval.explore.words.util.constval.ExploreConstVal
 import org.nlpcn.commons.lang.occurrence.Count
+import retrieval.explore.words.util.Util
 
 object Test {
-  //list 2 tuple.
-  def list2Tuple(originList : List[Any]) = {
-    val newTuple = originList match {
-      case List(a, b, c, d, e, f, g, h, i, j, _*) => (a, b, c, d, e, f, g, h, i, j)
-      case List(a, b, c, d, e, f, g, h, i, _*)    => (a, b, c, d, e, f, g, h, i)
-      case List(a, b, c, d, e, f, g, h, _*)       => (a, b, c, d, e, f, g, h)
-      case List(a, b, c, d, e, f, g, _*)          => (a, b, c, d, e, f, g)
-      case List(a, b, c, d, e, f, _*)             => (a, b, c, d, e, f)
-      case List(a, b, c, d, e, _*)                => (a, b, c, d, e)
-      case List(a, b, c, d, _*)                   => (a, b, c, d)
-      case List(a, b, c, _*)                      => (a, b, c)
-      case List(a, b, _*)                         => (a, b)
-      case _                                      => Nil
-    }
-    newTuple
-  }
-
-  //得到重复数;
-  def getDupCnt(multiLeft : List[Product]) = {
-    val nws = multiLeft.map { x => x.productIterator.mkString }
-    nws.size - nws.distinct.size
-  }
-
   def main(args : Array[String]) {
     val path = "yuliao/ssw"
 
@@ -89,7 +67,7 @@ object Test {
         //生成的词不是分词产生的词;
         if (!(library existsTerm nw)) {
           val l = (word.getWord :: originList.reverse).reverse
-          val t = list2Tuple(l)
+          val t = Util.list2Tuple(l)
           candidate.addCandidateTerm(nw, t)
           candidate.addNewTermInvertedIndex(word.getOffsetEnd, t)
           candidate.addDupNewTerm(nw, word.getOffsetEnd)

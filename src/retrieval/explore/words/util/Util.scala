@@ -1,6 +1,28 @@
 package retrieval.explore.words.util
 
 object Util {
+  //得到重复数;
+  def getDupCnt(multiLeft : List[Product]) = {
+    val nws = multiLeft.map { x => x.productIterator.mkString }
+    nws.size - nws.distinct.size
+  }
+
+  //list 2 tuple.
+  def list2Tuple(originList : List[Any]) = {
+    val newTuple = originList match {
+      case List(a, b, c, d, e, f, g, h, i, j, _*) => (a, b, c, d, e, f, g, h, i, j)
+      case List(a, b, c, d, e, f, g, h, i, _*)    => (a, b, c, d, e, f, g, h, i)
+      case List(a, b, c, d, e, f, g, h, _*)       => (a, b, c, d, e, f, g, h)
+      case List(a, b, c, d, e, f, g, _*)          => (a, b, c, d, e, f, g)
+      case List(a, b, c, d, e, f, _*)             => (a, b, c, d, e, f)
+      case List(a, b, c, d, e, _*)                => (a, b, c, d, e)
+      case List(a, b, c, d, _*)                   => (a, b, c, d)
+      case List(a, b, c, _*)                      => (a, b, c)
+      case List(a, b, _*)                         => (a, b)
+      case _                                      => Nil
+    }
+    newTuple
+  }
 
   private def calStandardDeviation(avg : Double, sample : List[Double]) = {
     val tmp = sample./:(0D)((sum, s) => sum + math.pow(s - avg, 2))
