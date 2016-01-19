@@ -32,7 +32,7 @@ class TermLibrary {
     if (invertedIndex contains pos) {
       invertedIndex(pos) += word
     } else {
-      var l = ListBuffer[String]()
+      val l = ListBuffer[String]()
       l += word
       invertedIndex += (pos -> l)
     }
@@ -97,7 +97,8 @@ class TermLibrary {
   def existsTerm(word : String) =
     if (terms contains word) true else false
 
-  private def addNighTerm(basicWord : String, destWord : String)(neighTerm : Map[String, Map[String, Int]]) {
+  //添加相邻关系;
+  private def addNighbTerm(basicWord : String, destWord : String)(neighTerm : Map[String, Map[String, Int]]) {
     if (neighTerm contains basicWord) {
       var cnt = 1
       if (neighTerm(basicWord) contains destWord)
@@ -113,11 +114,11 @@ class TermLibrary {
 
   //添加左邻词; 
   def addLeftTerm(basicWord : String, destWord : String) {
-    addNighTerm(basicWord, destWord) { leftTerms }
+    addNighbTerm(basicWord, destWord) { leftTerms }
   }
 
   //添加右邻词;
   def addRigthTerm(basicWord : String, destWord : String) {
-    addNighTerm(basicWord, destWord) { rightTerms }
+    addNighbTerm(basicWord, destWord) { rightTerms }
   }
 }

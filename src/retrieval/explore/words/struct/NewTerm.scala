@@ -3,6 +3,7 @@ package retrieval.explore.words.struct
 import scala.collection.mutable.HashMap
 import retrieval.explore.words.util.constval.ExploreConstVal
 import scala.collection.mutable.ListBuffer
+import retrieval.explore.words.util.Util
 
 /**
  * 产生的新词；
@@ -104,9 +105,30 @@ class NewTerm {
 
   //打印结果;
   def result(library : TermLibrary) = {
-    val l = for (term <- newTerm if term._2._1 >= ExploreConstVal.score) yield { (term._1, term._2) }
-    (l.filter(p => p._2._2 >= ExploreConstVal.showNum).toList.sortWith((x, y) => x._2._1 < y._2._1).map(
-      x =>
-        x._1 + " " + x._2 + " " + getNewTermTuple(x._1) + "\n   " + getEntropy(getNewTermTuple(x._1), library))).mkString("\n")
+    val l = for (term <- newTerm if term._2._2 >= ExploreConstVal.showNum) yield {
+      val ex = term._2._2
+      val sample = getNewTermTuple(term._1).productIterator.map { x => library.getTermFre(x.toString()) }.toList
+      (term._1, term._2, (Util.evaluateWeight1(ex, sample), Util.evaluateWeight2(ex, sample), Util.evaluateWeight3(sample), Util.evaluateWeight4(ex, sample)))
+    }
+
+    val res = l.toList.sortWith((x, y) => if (x._3._2 == y._3._2) x._2._2 > y._2._2 else x._3._2 < y._3._2)
+      .map(x => x._1).take(2000).sortWith((x, y) => x.length() > y.length())
+
+    val res_fil = for (
+      t <- res.reverse;
+      set1 = res.filter { x => x.length() > t.length() } if (!set1.exists { x => x contains (t) })
+    ) yield {
+      t
+    }
+
+    val r1 = for (ct <- res_fil; calV = newTerm(ct)) yield {
+      val ex = calV._2
+      val sample = getNewTermTuple(ct).productIterator.map { x => library.getTermFre(x.toString()) }.toList
+      (ct, calV, (Util.evaluateWeight1(ex, sample), Util.evaluateWeight2(ex, sample), Util.evaluateWeight3(sample), Util.evaluateWeight4(ex, sample)))
+    }
+
+    val r2 = r1.toList.sortWith((x, y) => if (x._3._2 == y._3._2) x._2._2 > y._2._2 else x._3._2 < y._3._2)
+
+    r2.mkString("\n")
   }
 }

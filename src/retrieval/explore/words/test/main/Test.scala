@@ -46,9 +46,10 @@ object Test {
 
     //文本分词链;
     println("分词...")
+    //分词结果;
     val words = ObtainTermInfo.obtainTerms(lines)
     println("建立词位置的倒排索引...")
-    //建立词位置的倒排索引;
+    //建立词位置的倒排索引;offsetEnd->word;
     for (word <- words) {
       library.addInvertedIndex(word.getOffsetEnd, word.getWord)
     }
@@ -56,6 +57,7 @@ object Test {
     println("统计分词信息...")
     for (word <- words) {
       library.addTerm(word.getWord)
+      //拉出与该词相邻的左边的词;
       val left = library.getInvertedIndex(word.getOffsetStart).toList
       for (w <- left) {
         library.addLeftTerm(word.getWord, w)
@@ -66,10 +68,11 @@ object Test {
     //第二次分析,添加候选词;扩展到多个词(5)
     println("计算候选词...")
     for (word <- words) {
-      //添加两个词的; 
+      //添加两个词的; 拉出与该词相邻的左边的词集合;
       val singleLeft = library.getInvertedIndex(word.getOffsetStart).toList
 
       for (sl <- singleLeft; nw = sl + word.getWord) {
+        //该词是否为分词产生的词;若是,则不处理; 
         if (!(library existsTerm nw)) {
           val t = (sl, word.getWord)
 
@@ -83,6 +86,7 @@ object Test {
       val multiLeft = candidate.getInvertedNewTerm(word.getOffsetStart).toList.filter { x => x.productIterator.size <= (ExploreConstVal.maxLength - 1) }
 
       for (ml <- multiLeft; originList = ml.productIterator.toList; nw = originList.mkString + word.getWord) {
+        //生成的词不是分词产生的词;
         if (!(library existsTerm nw)) {
           val l = (word.getWord :: originList.reverse).reverse
           val t = list2Tuple(l)
