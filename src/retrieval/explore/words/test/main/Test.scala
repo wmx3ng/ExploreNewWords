@@ -12,7 +12,7 @@ import retrieval.explore.words.util.Util
 
 object Test {
   def main(args : Array[String]) {
-    val path = "yuliao/ssw"
+    val path = "yuliao/myweibo"
 
     //从文件中读取文本;
     val lines = Source.fromFile(new java.io.File(path)).getLines().toList.mkString

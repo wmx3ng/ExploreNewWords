@@ -112,7 +112,7 @@ class NewTerm {
     }
 
     val res = l.toList.sortWith((x, y) => if (x._3._2 == y._3._2) x._2._2 > y._2._2 else x._3._2 < y._3._2)
-      .map(x => x._1).take(2000).sortWith((x, y) => x.length() > y.length())
+      .map(x => x._1).take(1000).sortWith((x, y) => x.length() > y.length())
 
     val res_fil = for (
       t <- res.reverse;
@@ -127,7 +127,9 @@ class NewTerm {
       (ct, calV, (Util.evaluateWeight1(ex, sample), Util.evaluateWeight2(ex, sample), Util.evaluateWeight3(sample), Util.evaluateWeight4(ex, sample)))
     }
 
-    val r2 = r1.toList.sortWith((x, y) => if (x._3._2 == y._3._2) x._2._2 > y._2._2 else x._3._2 < y._3._2)
+    val r2 = r1.toList.sortWith((x, y) => if (x._3._2 == y._3._2) x._2._2 > y._2._2 else x._3._2 < y._3._2).map {
+      x => x._1 + " " + x._2._2 + " " + x._3._2 + "\n" + getEntropy(newTuple(x._1), library)
+    }
 
     r2.mkString("\n")
   }
